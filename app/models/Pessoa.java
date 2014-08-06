@@ -6,6 +6,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.UniqueConstraint;
+import javax.validation.Constraint;
+
+import play.data.validation.Constraints.Required;
 
 @Entity(name = "Pessoa")
 public class Pessoa {
@@ -18,10 +22,16 @@ public class Pessoa {
 	private Long id;
 	
 	@Column
+	@Required
 	private String nome;
 	
-	@Column
+	@Column (unique=true)
+	@Required
 	private String email;
+	
+	@Column
+	@Required
+	private String senha;
 	
 	// Construtor vazio para o Hibernate criar os objetos
 	public Pessoa (){
@@ -55,6 +65,14 @@ public class Pessoa {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public String getSenha() {
+		return this.senha;
+	}
+	
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	@Override

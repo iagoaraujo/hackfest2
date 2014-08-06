@@ -3,11 +3,13 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.sistema()
+GET     /                           controllers.Application.index()
 
 # Map static resources from the /public folder to the /assets URL path
+GET     /home                       controllers.Application.logar()
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
-GET     /cadastro                   controllers.Application.cadastro()
+GET     /cadastroUsuario            controllers.Application.cadastroUsuario()
 POST    /cadastro                   controllers.Application.newEvento()
 POST    /:id/participar             controllers.Application.participar(id: Long)
-POST    /:id/participar         controllers.Application.addParticipante(id: Long)
+POST    /:id/participar             controllers.Application.addParticipante(id: Long)
+POST    /cadastrarUsuario           controllers.Application.cadastrarUsuario()

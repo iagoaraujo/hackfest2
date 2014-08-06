@@ -98,8 +98,4 @@ public class Sistema {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
-	
-	
-
 }

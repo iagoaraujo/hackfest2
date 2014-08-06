@@ -2,14 +2,15 @@ package controllers;
 
 import java.util.List;
 
-import models.*;
+import models.Evento;
+import models.Pessoa;
+import models.Sistema;
 import models.dao.GenericDAO;
 import models.dao.GenericDAOImpl;
-import play.*;
 import play.data.Form;
 import play.db.jpa.Transactional;
-import play.mvc.*;
-import views.html.*;
+import play.mvc.Controller;
+import play.mvc.Result;
 
 public class Application extends Controller {
 	static Form<Evento> eventoForm = Form.form(Evento.class);
@@ -18,11 +19,11 @@ public class Application extends Controller {
 	private static int controleInicio;
 
     public static Result index() {
-        return ok(index.render("Your new application is ready."));
+        return ok(views.html.login.render(pessoaForm));
     }
     
     @Transactional
-    public static Result sistema() {
+    public static Result logar() {
     	controleInicio = controleInicio + 1;
     	if (controleInicio == 1){
     		
@@ -140,7 +141,7 @@ public class Application extends Controller {
 			getDao().persist(evento);
 			// Espelha no Banco de Dados
 			getDao().flush();
-			return redirect(routes.Application.sistema());
+			return redirect(routes.Application.logar());
 		}
     	
     	
@@ -173,12 +174,19 @@ public class Application extends Controller {
     	result = getDao().findAllByClassName("Evento");
     	sistema.setEventos(result);
 		return ok(views.html.evento.render(sistema, evento));
-		}
-    	
-    	
-    	
-    	
+	}
     
+    public static Result cadastroUsuario() {
+    	return ok(views.html.cadastroUsuario.render(pessoaForm));
+    }
+    	
+    @Transactional
+    public static Result cadastrarUsuario() {
+    	Form<Pessoa> filledForm = pessoaForm.bindFromRequest();
+    	getDao().merge(filledForm.get());
+    	getDao().flush();
+    	return ok(views.html.cadastroUsuarioSucesso.render());
+    }
 
 	public static GenericDAO getDao() {
 		return dao;
@@ -187,7 +195,5 @@ public class Application extends Controller {
 	public static void setDao(GenericDAO dao) {
 		Application.dao = dao;
 	}
-    
-    
 
 }

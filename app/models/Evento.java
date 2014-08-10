@@ -7,10 +7,6 @@ import java.util.TreeSet;
 
 import javax.persistence.*;
 
-import org.hibernate.annotations.IndexColumn;
-
-
-
 @Entity(name = "Evento")
 public class Evento implements Comparable<Evento> {
 	
@@ -31,11 +27,11 @@ public class Evento implements Comparable<Evento> {
 	@Column
 	private String data;
 	
-	@Column
-	private String nomeAdmin;
+	@OneToOne
+	private Pessoa administrador;
 	
-	@Column
-	private String emailAdmin;
+	@OneToOne
+	private Local local;
 	
 	@Column
 	private String tema1;
@@ -51,24 +47,26 @@ public class Evento implements Comparable<Evento> {
 	
 	@Column
 	private String tema5;
+	
+	//Usado pelo formulário de cadastro do evento
+	@Transient
+	private Long localId;
+	@Transient
+	private boolean hasNewLocal;
 		
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	@JoinColumn 
-	private Set<Pessoa> PessoasQueConfirmaram;
+	@ManyToMany(cascade=CascadeType.ALL)
+	private List<Pessoa> PessoasQueConfirmaram =  new ArrayList<Pessoa>();
 	
 	// Construtor vazio para o Hibernate criar os objetos
 	public Evento(){
-		this.PessoasQueConfirmaram = new TreeSet<Pessoa>();
 	}
-	public Evento(String nome, String descricao, String data, String nomeAdmin, String emailAdmin) {
+	public Evento(String nome, String descricao, String data, Pessoa administrador,
+			Local local) {
 		this.nome = nome;
 		this.descricao = descricao;
 		this.data = data;
-		this.nomeAdmin = nomeAdmin;
-		this.emailAdmin = emailAdmin;
-		this.PessoasQueConfirmaram = new TreeSet<Pessoa>();
-		
-		
+		this.administrador = administrador;
+		this.local = local;
 	}
 	public String getNome() {
 		return nome;
@@ -88,17 +86,20 @@ public class Evento implements Comparable<Evento> {
 	public void setData(String data) {
 		this.data = data;
 	}
+	
+	public Long getLocalId() {
+		return localId;
+	}
 		
-	public Set<Pessoa> getNumDePessoasQueConfirmaram() {
-		return PessoasQueConfirmaram;
+	public void setLocalId(Long id) {
+		this.localId = id;
 	}
-	public void setNumDePessoasQueConfirmaram(
-			Set<Pessoa> numDePessoasQueConfirmaram) {
-		this.PessoasQueConfirmaram = numDePessoasQueConfirmaram;
-	}
+	
 	public void addParticipanteNoEvento(Pessoa pessoa) {
+		System.out.println("METODO PARA ADICIONAR");
 		if (!this.PessoasQueConfirmaram.contains(pessoa)){
-		this.PessoasQueConfirmaram.add(pessoa);
+			System.out.println("PESSOA ADICIONADA");
+			this.PessoasQueConfirmaram.add(pessoa);
 		}
 	}
 	
@@ -131,23 +132,11 @@ public class Evento implements Comparable<Evento> {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Set<Pessoa> getPessoasQueConfirmaram() {
+	public List<Pessoa> getPessoasQueConfirmaram() {
 		return PessoasQueConfirmaram;
 	}
-	public void setPessoasQueConfirmaram(Set<Pessoa> pessoasQueConfirmaram) {
+	public void setPessoasQueConfirmaram(List<Pessoa> pessoasQueConfirmaram) {
 		PessoasQueConfirmaram = pessoasQueConfirmaram;
-	}
-	public String getNomeAdmin() {
-		return nomeAdmin;
-	}
-	public void setNomeAdmin(String nomeAdmin) {
-		this.nomeAdmin = nomeAdmin;
-	}
-	public String getEmailAdmin() {
-		return emailAdmin;
-	}
-	public void setEmailAdmin(String emailAdmin) {
-		this.emailAdmin = emailAdmin;
 	}
 	public String getTema1() {
 		return tema1;
@@ -178,6 +167,22 @@ public class Evento implements Comparable<Evento> {
 	}
 	public void setTema5(String tema5) {
 		this.tema5 = tema5;
+	}
+	
+	public Local getLocal() {
+		return local;
+	}
+	
+	public void setLocal(Local local) {
+		this.local = local;
+	}
+	
+	public Pessoa getAdministrador() {
+		return administrador;
+	}
+	
+	public void setAdministrador(Pessoa administrador) {
+		this.administrador = administrador;
 	}
 	
 	public List<String> getTemas(){
@@ -214,8 +219,18 @@ public class Evento implements Comparable<Evento> {
 		}
 		
 	}
+	public boolean isHasNewLocal() {
+		return hasNewLocal;
+	}
+	public void setHasNewLocal(boolean hasNewLocal) {
+		this.hasNewLocal = hasNewLocal;
+	}
 	
+	public boolean isEventoClosed() {
+		return this.getLocal().getCapacidade()<=numDePessoasQueConfirmaram();
+	}
 	
-	
-
+	public boolean isUsuarioInscrito(Pessoa pessoa) {
+		return PessoasQueConfirmaram.contains(pessoa);
+	}
 }

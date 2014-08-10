@@ -80,7 +80,7 @@ public class Pessoa {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+		result = prime * result + ((senha == null) ? 0 : senha.hashCode());
 		return result;
 	}
 
@@ -90,7 +90,7 @@ public class Pessoa {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof Pessoa))
 			return false;
 		Pessoa other = (Pessoa) obj;
 		if (email == null) {
@@ -98,12 +98,12 @@ public class Pessoa {
 				return false;
 		} else if (!email.equals(other.email))
 			return false;
-		if (nome == null) {
-			if (other.nome != null)
+		if (senha == null) {
+			if (other.senha != null)
 				return false;
-		} else if (!nome.equals(other.nome))
+		} else if (!senha.equals(other.senha))
 			return false;
 		return true;
-	}	
+	}
 
 }

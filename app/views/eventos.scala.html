@@ -15,20 +15,21 @@
                     </thead>
                     <tbody>
                     @for(evento <- sistema.EventosPorTema(tema)) {
-                    	
                         <tr>
                             <td>@evento.getNome()</td>
                             <td>@evento.getDescricao()</td>
                             <td>@evento.getData()</td>
                             
                             <td>
-                                                    
+                            @if(!evento.isEventoClosed() && !evento.isUsuarioInscrito(sistema.getUsuarioLogado())) {                        
                             <form action="@routes.Application.participar(evento.getId())" method="post"> 
                                 <input type="submit" class="btn btn-primary" value="Participar">
-                            </form> 
+                            </form>
+                            } else {
+                            	<input type="button" class="btn btn-primary" value="Inscrito" disabled="disabled">
+                            } 
                             </td>
                         </tr>
-                        
                     }
                     </tbody>
                 </table>

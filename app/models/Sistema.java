@@ -18,11 +18,21 @@ public class Sistema {
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn
-	private List<Evento> eventos;
+	private List<Evento> eventos = new ArrayList<Evento>();
+	
+	@Transient
+	private Pessoa usuarioLogado;
 	
 	// Construtor vazio para o Hibernate criar os objetos 
 	public Sistema(){
-		this.eventos = new ArrayList<Evento>();
+	}
+
+	public Pessoa getUsuarioLogado() {
+		return usuarioLogado;
+	}
+
+	public void setUsuarioLogado(Pessoa usuarioLogado) {
+		this.usuarioLogado = usuarioLogado;
 	}
 
 	public List<Evento> getEventos() {
@@ -66,31 +76,6 @@ public class Sistema {
 		return this.eventos.contains(evento);
 	}
 	
-	public void addPessoaNoEvento(Evento evento, Pessoa pessoa){
-		if (this.eventos.contains(evento)){
-			for (Evento eventoaux : this.eventos){
-				if (eventoaux.equals(evento)){
-					Evento eventoFinal = eventoaux;
-					eventoFinal.addParticipanteNoEvento(pessoa);
-					this.eventos.remove(eventoaux);
-					this.eventos.add(eventoFinal);
-					return;
-				}
-			}
-		}
-	}
-	
-	public void removePessoaDoEvento(Evento evento, Pessoa pessoa){
-		if (this.eventos.contains(evento)){
-			for (Evento eventoaux : this.eventos){
-				if (eventoaux.equals(evento)){
-					this.eventos.remove(eventoaux);
-					return;
-				}
-			}
-		}
-	}
-
 	public Long getId() {
 		return id;
 	}
@@ -98,4 +83,5 @@ public class Sistema {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	
 }

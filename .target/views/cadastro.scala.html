@@ -1,8 +1,10 @@
-@(sistema: Sistema)
+@(sistema: Sistema, locais: List[Local], eventoForm: Form[Evento], localForm: Form[Local])
 <!DOCTYPE html>
 <html>
 	<head>
 		<title>Sistema de Hackfests</title>
+		<meta charset="utf-8">
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<link href="@routes.Assets.at("css/bootstrap.min.css")" rel="stylesheet" media="screen">
 		<link rel="stylesheet" media="screen"
 		href="@routes.Assets.at("stylesheets/main.css")">
@@ -13,13 +15,33 @@
 		type="text/javascript">
 		</script>
 		
+		<script type="text/javascript">
+		$(document).ready(function() {
+	 
+	        $('#checkboxLocal').change(function(){
+	        	 cb = $(this);
+	             cb.val(cb.prop('checked'));
+	        	 if(this.checked)
+	             {
+	                   $("#registerLocalDiv").show();
+	                   $("#selectLocalDiv").hide();
+	             }
+	             else
+	             {
+	                    $("#registerLocalDiv").hide();
+	                    $("#selectLocalDiv").show();
+	             }
+	        });
+	    });
+		</script>
+		
 	</head>
 	<body>	
 		<center><img class="centralizar" src="@routes.Assets.at("images/logo.png")" /> </center>
         <ul class="nav nav-pills">
           <li><a href="/""> In&iacute;cio</a></li>
-          <li class="active"><a href="/cadastrarHackfest">Cadastrar um novo Hackfest</a></li>
-          
+          <li class="active"><a href="/cadastro">Cadastrar um novo Hackfest</a></li>
+          <li><a href="/home/logout">Sair</a></li>
         </ul>	
         <div class="container form-horizontal panel panel-primary text-info" >
         
@@ -41,10 +63,25 @@
             <input class="input-xlarge" size="30" id="focusedInput" type="text" value="Computacao Desplugada" name=tema4>
             <input class="input-xlarge" size="30" id="focusedInput" type="text" value="Desenvolvimento para Web" name=tema5>
             
+            <div id="selectLocalDiv">
+            <h4>Selecione o local do evento: </h4>
+             <select name="localId">
+            	@for(local <- locais) {
+  					<option value=@local.getId()>@local.getNomeLocal()</option>
+  				}
+			</select>
+			</div>
+			<br>
+            <input type="checkbox" id="checkboxLocal" name="hasNewLocal" value="">Outro local<br>
+            <div id="registerLocalDiv" hidden="true">
+            	<h4>Informe o local do evento: </h4>
+            	<input class="input-xxlarge" type="text" size="80" maxlength="30" placeholder="Nome do local" name="nomeLocal" value=""><br><br>
+            	<input class="input-xxlarge" type="text" size="176" maxlength="80" placeholder="Descreva como chegar ao local" name="explicacao" value=""><br><br>
+            	<input class="input-xxlarge" type="number" size="40" maxlength="10" placeholder="Capacidade" name="capacidade" value=""> <br>
+            </div>
+            
 			<br>
 			<br>
-			<input class="input-xxlarge" type="text" size="30" maxlength="30" placeholder="Insira o seu nome" name="nomeAdmin">
-			<input class="input-xxlarge" type="text" size="50" maxlength="30" placeholder="Insira o Seu email" name="EmailAdmin">
 			<br><br><center><input type="submit" class="btn btn-primary" value="Cadastrar">  </center></div>
              </form>
              

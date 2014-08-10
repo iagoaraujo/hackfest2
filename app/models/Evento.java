@@ -48,6 +48,9 @@ public class Evento implements Comparable<Evento> {
 	@Column
 	private String tema5;
 	
+	@Column
+	private boolean prioritario;
+	
 	//Usado pelo formulário de cadastro do evento
 	@Transient
 	private Long localId;
@@ -233,4 +236,11 @@ public class Evento implements Comparable<Evento> {
 	public boolean isUsuarioInscrito(Pessoa pessoa) {
 		return PessoasQueConfirmaram.contains(pessoa);
 	}
+	public boolean isPrioritario() {
+		return prioritario;
+	}
+	public void setPrioritario(boolean prioritario) {
+		this.prioritario = prioritario;
+	}
+	
 }

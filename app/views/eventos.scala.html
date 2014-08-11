@@ -14,7 +14,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @for(evento <- sistema.EventosPorTema(tema)) {
+                    @for(evento <- sistema.eventosPorTema(tema)) {
                         <tr>
                             <td>@evento.getNome()</td>
                             <td>@evento.getDescricao()</td>

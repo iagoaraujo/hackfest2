@@ -19,7 +19,7 @@ public class Login extends Controller {
 	@Transactional
 	public static Result logout() {
 		session().clear();
-		return show();
+		return redirect(routes.Login.show());
 	}
 	
 	@Transactional

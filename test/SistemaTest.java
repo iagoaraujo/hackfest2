@@ -39,16 +39,16 @@ public class SistemaTest {
 		pessoa4 = new Pessoa("Ana", "ana@gmail.com");
 		pessoa5 = new Pessoa("Gleyser", "gleyser@gmail.com");
 		
-		evento1 = new Evento("Dados abertos", "Esse evento tem o objetivo de realizar atividades com dados abertos", "11/09/2014", "Jose", "jose@gmail.com");
-		evento2 = new Evento("HTML", "Esse evento tem o objetivo de realizar atividades com HTML", "09/09/2014", "Jose", "jose@gmail.com");
-		evento3 = new Evento("Computacao Desplugada", "Esse evento tem o objetivo de realizar atividades com computacao desplugada", "11/06/2014", "Jose", "jose@gmail.com");
-		evento4 = new Evento("Metodos Formais", "Esse evento tem o objetivo de realizar atividades com metodos formais", "18/06/2014", "Jose", "jose@gmail.com");
-		evento5 = new Evento("Banco de Dados Gerenciais", "Esse evento tem o objetivo de realizar atividades com banco de dados gerenciais", "11/09/2014", "Jose", "jose@gmail.com");
-		evento6 = new Evento("Banco de Dados Sequenciais", "Esse evento tem o objetivo de realizar atividades com banco de dados sequenciais", "14/09/2014", "Jose", "jose@gmail.com");
-		evento7 = new Evento("Sites Dinamicos", "Esse evento tem o objetivo de realizar atividades com sites dinamicos", "17/08/2014", "Jose", "jose@gmail.com");
-		evento8 = new Evento("Aplicações Java", "Esse evento tem o objetivo de realizar atividades com aplicacoes java", "01/09/2014", "Jose", "jose@gmail.com");
-		evento9 = new Evento("Estruturas de dados", "Esse evento tem o objetivo de realizar atividades com estruturas de dados", "12/07/2014", "Jose", "jose@gmail.com");
-		evento10 = new Evento("Binarios", "Esse evento tem o objetivo de realizar atividades com binarios sem a utilizacao de computador", "11/09/2014", "Jose", "jose@gmail.com");
+		evento1 = new Evento("Dados abertos", "Esse evento tem o objetivo de realizar atividades com dados abertos", "11/09/2014", pessoa1);
+		evento2 = new Evento("HTML", "Esse evento tem o objetivo de realizar atividades com HTML", "09/09/2014", pessoa1);
+		evento3 = new Evento("Computacao Desplugada", "Esse evento tem o objetivo de realizar atividades com computacao desplugada", "11/06/2014", pessoa1);
+		evento4 = new Evento("Metodos Formais", "Esse evento tem o objetivo de realizar atividades com metodos formais", "18/06/2014", pessoa1);
+		evento5 = new Evento("Banco de Dados Gerenciais", "Esse evento tem o objetivo de realizar atividades com banco de dados gerenciais", "11/09/2014", pessoa1);
+		evento6 = new Evento("Banco de Dados Sequenciais", "Esse evento tem o objetivo de realizar atividades com banco de dados sequenciais", "14/09/2014", pessoa1);
+		evento7 = new Evento("Sites Dinamicos", "Esse evento tem o objetivo de realizar atividades com sites dinamicos", "17/08/2014", pessoa1);
+		evento8 = new Evento("Aplicações Java", "Esse evento tem o objetivo de realizar atividades com aplicacoes java", "01/09/2014", pessoa1);
+		evento9 = new Evento("Estruturas de dados", "Esse evento tem o objetivo de realizar atividades com estruturas de dados", "12/07/2014", pessoa1);
+		evento10 = new Evento("Binarios", "Esse evento tem o objetivo de realizar atividades com binarios sem a utilizacao de computador", "11/09/2014", pessoa1);
 		
 		tema1 = "Engenharia de Software";
 		tema2 = "Sistemas da Informacao";
@@ -143,24 +143,24 @@ public class SistemaTest {
 	
 	@Test
 	public void testaEventosPorTema(){
-		Assert.assertEquals(5, sistema.EventosPorTema(tema1).size());
-		Assert.assertEquals(2, sistema.EventosPorTema(tema2).size());
-		Assert.assertEquals(4, sistema.EventosPorTema(tema3).size());
-		Assert.assertEquals(4, sistema.EventosPorTema(tema4).size());
-		Assert.assertEquals(3, sistema.EventosPorTema(tema5).size());
-		Assert.assertEquals(evento1, sistema.EventosPorTema(tema1).get(0));
-		Assert.assertEquals(evento1, sistema.EventosPorTema(tema5).get(0));
+		Assert.assertEquals(5, sistema.eventosPorTema(tema1).size());
+		Assert.assertEquals(2, sistema.eventosPorTema(tema2).size());
+		Assert.assertEquals(4, sistema.eventosPorTema(tema3).size());
+		Assert.assertEquals(4, sistema.eventosPorTema(tema4).size());
+		Assert.assertEquals(3, sistema.eventosPorTema(tema5).size());
+		Assert.assertEquals(evento1, sistema.eventosPorTema(tema1).get(0));
+		Assert.assertEquals(evento1, sistema.eventosPorTema(tema5).get(0));
 		sistema.removeEvento(evento1);
 		// Testando apos uma remocao
-		Assert.assertEquals(evento4, sistema.EventosPorTema(tema1).get(0));
+		Assert.assertEquals(evento4, sistema.eventosPorTema(tema1).get(0));
 	}
 	
 	@Test
 	public void testaOrdenaPorNumeroDePessoas(){
-		Assert.assertEquals(evento1, sistema.EventosOrdenadosPorQuantidadeDePessoas().get(0));
-		Assert.assertEquals(evento2, sistema.EventosOrdenadosPorQuantidadeDePessoas().get(1));
-		Assert.assertEquals(evento3, sistema.EventosOrdenadosPorQuantidadeDePessoas().get(2));
-		Assert.assertEquals(evento4, sistema.EventosOrdenadosPorQuantidadeDePessoas().get(3));
+		Assert.assertEquals(evento1, sistema.eventosOrdenadosPorQuantidadeDePessoas().get(0));
+		Assert.assertEquals(evento2, sistema.eventosOrdenadosPorQuantidadeDePessoas().get(1));
+		Assert.assertEquals(evento3, sistema.eventosOrdenadosPorQuantidadeDePessoas().get(2));
+		Assert.assertEquals(evento4, sistema.eventosOrdenadosPorQuantidadeDePessoas().get(3));
 		
 		// Adicionar mais pessoas no evento 2 para verificar se ele passar a ser o primeiro da lista
 		Pessoa pessoa12 = new Pessoa("Margarida", "margarida@gmail.com");
@@ -169,13 +169,13 @@ public class SistemaTest {
 		sistema.addPessoaNoEvento(evento2, pessoa12);
 		sistema.addPessoaNoEvento(evento2, pessoa13);
 		sistema.addPessoaNoEvento(evento2, pessoa14);
-		Assert.assertEquals(evento2, sistema.EventosOrdenadosPorQuantidadeDePessoas().get(0));
+		Assert.assertEquals(evento2, sistema.eventosOrdenadosPorQuantidadeDePessoas().get(0));
 		
 		// Adicionar mais no evento 1 para verificar se ele volta a ser o primeiro da lista
 		sistema.addPessoaNoEvento(evento1, pessoa12);
 		sistema.addPessoaNoEvento(evento1, pessoa13);
 		sistema.addPessoaNoEvento(evento1, pessoa14);
-		Assert.assertEquals(evento1, sistema.EventosOrdenadosPorQuantidadeDePessoas().get(0));
+		Assert.assertEquals(evento1, sistema.eventosOrdenadosPorQuantidadeDePessoas().get(0));
 	}
 
 }

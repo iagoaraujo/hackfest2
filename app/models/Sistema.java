@@ -51,7 +51,7 @@ public class Sistema {
 		return this.eventos.remove(evento);
 	}
 	
-	public List<Evento> EventosPorTema(String tema){
+	public List<Evento> eventosPorTema(String tema){
 		
 		List<Evento> retorno = new ArrayList<Evento>();
 		for (Evento evento: this.eventos){
@@ -62,7 +62,7 @@ public class Sistema {
 		return retorno;
 	}
 	
-	public List<Evento> EventosOrdenadosPorQuantidadeDePessoas(){
+	public List<Evento> eventosOrdenadosPorQuantidadeDePessoas(){
 		List<Evento> copiaDeEventos = this.eventos;
 		Collections.sort(copiaDeEventos);
 		return copiaDeEventos;
@@ -84,4 +84,17 @@ public class Sistema {
 		this.id = id;
 	}
 	
+	public void addPessoaNoEvento(Evento evento, Pessoa pessoa){
+		if (this.eventos.contains(evento)){
+			for (Evento eventoaux : this.eventos){
+				if (eventoaux.equals(evento)){
+					Evento eventoFinal = eventoaux;
+					eventoFinal.addParticipanteNoEvento(pessoa);
+					this.eventos.remove(eventoaux);
+					this.eventos.add(eventoFinal);
+					return;
+				}
+			}
+		}
+	}
 }

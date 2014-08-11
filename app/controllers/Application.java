@@ -14,9 +14,9 @@ import play.mvc.Controller;
 import play.mvc.Result;
 
 public class Application extends Controller {
-	static Form<Evento> eventoForm = Form.form(Evento.class);
-	static Form<Pessoa> pessoaForm = Form.form(Pessoa.class);
-	static Form<Local> localForm = Form.form(Local.class);
+	private static Form<Evento> eventoForm = Form.form(Evento.class);
+	private static Form<Pessoa> pessoaForm = Form.form(Pessoa.class);
+	private static Form<Local> localForm = Form.form(Local.class);
 	private static GenericDAO dao = new GenericDAOImpl();
 
     public static Result index() {
@@ -29,7 +29,6 @@ public class Application extends Controller {
     		return index();
     	}
     	if (getDao().findAllByClassName("Evento").isEmpty()){
-    		System.out.println("CRIA EXEMPLOS");
     		Local local1;
     		Local local2;
     		Local local3;
@@ -147,13 +146,17 @@ public class Application extends Controller {
     	// O formulario de evento
 		Form<Evento> filledForm = eventoForm.bindFromRequest("nome","descricao",
 				"data","tema1","tema2","tema3","tema4","tema5","localId", 
-				"hasNewLocal");
+				"hasNewLocal", "prioritario");
 		List<Local> locais = getDao().findAllByClassName("Local");
 		
 		Evento evento = filledForm.get();
 		
-		evento.setAdministrador(getDao().findByEntityId(Pessoa.class, 
-				Long.valueOf(session("user"))));
+		Pessoa usuarioLogado = getDao().findByEntityId(Pessoa.class, 
+				Long.valueOf(session("user")));
+		usuarioLogado.setNumEventosCriados(usuarioLogado.getNumEventosCriados()+1);
+		getDao().merge(usuarioLogado);
+		getDao().flush();
+		evento.setAdministrador(usuarioLogado);
 		if(!evento.isHasNewLocal()) {
 			evento.setLocal(getDao().findByEntityId(Local.class, 
 				evento.getLocalId()));
@@ -163,6 +166,7 @@ public class Application extends Controller {
 					"explicacao", "capacidade");
 			Local local = localFormFilled.get();
 			getDao().persist(local);
+			getDao().flush();
 			evento.setLocal(local);
 		}
 		
@@ -197,7 +201,10 @@ public class Application extends Controller {
 		Evento evento = getDao().findByEntityId(Evento.class, id);
 		Pessoa pessoa = getDao().findByEntityId(Pessoa.class, 
 				Long.valueOf(session("user")));
+		pessoa.setNumEventosInscritos(pessoa.getNumEventosInscritos()+1);
 		evento.addParticipanteNoEvento(pessoa);
+		evento.sortListaInscritos();
+		getDao().merge(pessoa);
 		getDao().merge(evento);
 		getDao().flush();
 		Sistema sistema = new Sistema();

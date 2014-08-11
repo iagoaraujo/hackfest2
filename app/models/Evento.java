@@ -1,9 +1,8 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 import javax.persistence.*;
 
@@ -58,7 +57,7 @@ public class Evento implements Comparable<Evento> {
 	private boolean hasNewLocal;
 		
 	@ManyToMany(cascade=CascadeType.ALL)
-	private List<Pessoa> PessoasQueConfirmaram =  new ArrayList<Pessoa>();
+	private List<Pessoa> pessoasQueConfirmaram =  new ArrayList<Pessoa>();
 	
 	// Construtor vazio para o Hibernate criar os objetos
 	public Evento(){
@@ -70,6 +69,12 @@ public class Evento implements Comparable<Evento> {
 		this.data = data;
 		this.administrador = administrador;
 		this.local = local;
+	}
+	public Evento(String nome, String descricao, String data, Pessoa administrador) {
+		this.nome = nome;
+		this.descricao = descricao;
+		this.data = data;
+		this.administrador = administrador;
 	}
 	public String getNome() {
 		return nome;
@@ -99,30 +104,28 @@ public class Evento implements Comparable<Evento> {
 	}
 	
 	public void addParticipanteNoEvento(Pessoa pessoa) {
-		System.out.println("METODO PARA ADICIONAR");
-		if (!this.PessoasQueConfirmaram.contains(pessoa)){
-			System.out.println("PESSOA ADICIONADA");
-			this.PessoasQueConfirmaram.add(pessoa);
+		if (!this.pessoasQueConfirmaram.contains(pessoa)){
+			this.pessoasQueConfirmaram.add(pessoa);
 		}
 	}
 	
 	public void removerParticipanteNoEvento(Pessoa pessoa) {
-		if (this.PessoasQueConfirmaram.contains(pessoa)){
-			this.PessoasQueConfirmaram.remove(pessoa);
+		if (this.pessoasQueConfirmaram.contains(pessoa)){
+			this.pessoasQueConfirmaram.remove(pessoa);
 		}
 		
 	}
 	
 	public int numDePessoasQueConfirmaram(){
-		return this.PessoasQueConfirmaram.size();
+		return this.pessoasQueConfirmaram.size();
 	}
 	
 	@Override
 	public int compareTo(Evento evento) {
-		if (this.PessoasQueConfirmaram.size() > evento.numDePessoasQueConfirmaram()) {
+		if (this.pessoasQueConfirmaram.size() > evento.numDePessoasQueConfirmaram()) {
 		      return -1;
 		    }
-	    if (this.PessoasQueConfirmaram.size() < evento.numDePessoasQueConfirmaram()) {
+	    if (this.pessoasQueConfirmaram.size() < evento.numDePessoasQueConfirmaram()) {
 		      return 1;
 		    }
 	    return 0;
@@ -136,10 +139,10 @@ public class Evento implements Comparable<Evento> {
 		this.id = id;
 	}
 	public List<Pessoa> getPessoasQueConfirmaram() {
-		return PessoasQueConfirmaram;
+		return pessoasQueConfirmaram;
 	}
 	public void setPessoasQueConfirmaram(List<Pessoa> pessoasQueConfirmaram) {
-		PessoasQueConfirmaram = pessoasQueConfirmaram;
+		this.pessoasQueConfirmaram = pessoasQueConfirmaram;
 	}
 	public String getTema1() {
 		return tema1;
@@ -234,13 +237,34 @@ public class Evento implements Comparable<Evento> {
 	}
 	
 	public boolean isUsuarioInscrito(Pessoa pessoa) {
-		return PessoasQueConfirmaram.contains(pessoa);
+		if (!pessoasQueConfirmaram.contains(pessoa)) {
+			return false;
+		}
+		if (isPrioritario()) {
+			return isUsuarioConfirmado(pessoa);
+		}
+		return true;
 	}
+	
+	public boolean isUsuarioConfirmado(Pessoa pessoa) {
+		int contador = 1;
+		sortListaInscritos();
+		for (Pessoa inscrito: pessoasQueConfirmaram) {
+			if (inscrito.equals(pessoa)) {
+				return contador<=local.getCapacidade();
+			}
+			contador++;
+		}
+		return false;
+	}
+	
 	public boolean isPrioritario() {
 		return prioritario;
 	}
 	public void setPrioritario(boolean prioritario) {
 		this.prioritario = prioritario;
 	}
-	
+	public void sortListaInscritos() {
+		Collections.sort(pessoasQueConfirmaram);
+	}
 }

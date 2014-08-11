@@ -6,13 +6,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.UniqueConstraint;
-import javax.validation.Constraint;
 
 import play.data.validation.Constraints.Required;
 
 @Entity(name = "Pessoa")
-public class Pessoa {
+public class Pessoa implements Comparable<Pessoa>{
 	// Gerador de Sequencia para o Id
 	// Todo Id tem que ter o GeneratedValue a não ser que ele seja setado
 	@Id
@@ -32,6 +30,12 @@ public class Pessoa {
 	@Column
 	@Required
 	private String senha;
+	
+	@Column
+	private int numEventosInscritos;
+	
+	@Column
+	private int numEventosCriados;
 	
 	// Construtor vazio para o Hibernate criar os objetos
 	public Pessoa (){
@@ -86,24 +90,64 @@ public class Pessoa {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof Pessoa))
+		}
+		if (!(obj instanceof Pessoa)) {
 			return false;
+		}
 		Pessoa other = (Pessoa) obj;
 		if (email == null) {
-			if (other.email != null)
+			if (other.email != null) {
 				return false;
-		} else if (!email.equals(other.email))
+			}
+		} else if (!email.equals(other.email)) {
 			return false;
+		}
 		if (senha == null) {
-			if (other.senha != null)
+			if (other.senha != null) {
 				return false;
-		} else if (!senha.equals(other.senha))
+			}
+		} else if (!senha.equals(other.senha)) {
 			return false;
+		}
 		return true;
+	}
+
+	public int getNumEventosInscritos() {
+		return numEventosInscritos;
+	}
+
+	public void setNumEventosInscritos(int numEventosInscritos) {
+		this.numEventosInscritos = numEventosInscritos;
+	}
+
+	public int getNumEventosCriados() {
+		return numEventosCriados;
+	}
+
+	public void setNumEventosCriados(int numEventosCriados) {
+		this.numEventosCriados = numEventosCriados;
+	}
+
+	@Override
+	public int compareTo(Pessoa pessoa) {
+		if(numEventosCriados>pessoa.getNumEventosCriados()) {
+			return -1;
+		}
+		if(numEventosCriados<pessoa.getNumEventosCriados()) {
+			return 1;
+		}
+		if(numEventosInscritos>pessoa.getNumEventosInscritos()) {
+			return -1;
+		}
+		if(numEventosInscritos<pessoa.getNumEventosInscritos()) {
+			return 1;
+		}
+		return 0;
 	}
 
 }

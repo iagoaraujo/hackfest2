@@ -30,6 +30,11 @@
   <body>
 
     <div class="container">
+    	@if(flash.contains("fail")) {
+   		<center> <p class="bg-danger" style="color: red;">
+        	@flash.get("fail")
+		</p></center>
+   }
 
       <form class="form-signin" role="form" action="@routes.Login.authenticate()" method="get">
         <h2 class="form-signin-heading">Bem-vindo</h2>

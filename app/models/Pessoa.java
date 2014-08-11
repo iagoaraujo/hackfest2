@@ -42,9 +42,10 @@ public class Pessoa implements Comparable<Pessoa>{
 		
 	}
 	
-	public Pessoa (String nome, String email){
+	public Pessoa (String nome, String email, String senha){
 		this.email = email;
 		this.nome = nome;
+		this.senha = senha;
 	}
 
 	public String getNome() {

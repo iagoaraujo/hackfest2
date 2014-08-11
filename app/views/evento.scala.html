@@ -32,7 +32,10 @@
 		Idealizador do evento: @evento.getAdministrador().getNome() <br> Contato: @evento.getAdministrador().getEmail() <br> 
 		Local: @evento.getLocal().getNomeLocal() <br>
 		Localização: @evento.getLocal().getExplicacao() <br>
-		Total de vagas: @evento.getLocal().getCapacidade() </h3>
+		Total de vagas: @evento.getLocal().getCapacidade()
+		@if(evento.isPrioritario()) {
+			IMPORTANTE: Programadores mais experientes tem prioridade.
+		} </h3>
 		</div>
 		<center>
 			<h3>Número de inscritos até o momento:</h3>

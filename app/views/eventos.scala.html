@@ -26,7 +26,7 @@
                             } else {
                            		@if(evento.isPrioritario()) {
                             		@if(!evento.isUsuarioConfirmado(sistema.getUsuarioLogado()) && evento.getPessoasQueConfirmaram().contains(sistema.getUsuarioLogado())) {
-                            			<input type="button" class="btn btn-primary" value="Sem Experiencia" disabled="disabled">
+                            			<input type="button" class="btn btn-primary" value="Experiencia Insuficiente" disabled="disabled">
                             		} else {
                             			<form action="@routes.Application.participar(evento.getId())" method="get"> 
                                 			<input type="submit" class="btn btn-primary" value="Participar">

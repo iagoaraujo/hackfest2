@@ -28,6 +28,10 @@ public class Application extends Controller {
     	if (session().get("user") == null) {
     		return index();
     	}
+    	if (getDao().findAllByClassName("Evento").isEmpty()) {
+    		GeradorExemplos.gera();
+    	}
+    	
     	Sistema sistema = new Sistema();
     	List<Evento> result = getDao().findAllByClassName("Evento");
     	sistema.setEventos(result);

@@ -33,11 +33,11 @@ public class SistemaTest {
 	public void iniciar(){
 		sistema = new Sistema();
 		
-		pessoa1 = new Pessoa("Jose", "jose@gmail.com");
-		pessoa2 = new Pessoa("Maria", "maria@gmail.com");
-		pessoa3 = new Pessoa("Alex", "alex@gmail.com");
-		pessoa4 = new Pessoa("Ana", "ana@gmail.com");
-		pessoa5 = new Pessoa("Gleyser", "gleyser@gmail.com");
+		pessoa1 = new Pessoa("Jose", "jose@gmail.com", "password");
+		pessoa2 = new Pessoa("Maria", "maria@gmail.com", "password");
+		pessoa3 = new Pessoa("Alex", "alex@gmail.com", "password");
+		pessoa4 = new Pessoa("Ana", "ana@gmail.com", "password");
+		pessoa5 = new Pessoa("Gleyser", "gleyser@gmail.com", "password");
 		
 		evento1 = new Evento("Dados abertos", "Esse evento tem o objetivo de realizar atividades com dados abertos", "11/09/2014", pessoa1);
 		evento2 = new Evento("HTML", "Esse evento tem o objetivo de realizar atividades com HTML", "09/09/2014", pessoa1);
@@ -163,9 +163,9 @@ public class SistemaTest {
 		Assert.assertEquals(evento4, sistema.eventosOrdenadosPorQuantidadeDePessoas().get(3));
 		
 		// Adicionar mais pessoas no evento 2 para verificar se ele passar a ser o primeiro da lista
-		Pessoa pessoa12 = new Pessoa("Margarida", "margarida@gmail.com");
-		Pessoa pessoa13 = new Pessoa("Magna", "magda@gmail.com");
-		Pessoa pessoa14 = new Pessoa("Hiago", "hiago@gmail.com");		
+		Pessoa pessoa12 = new Pessoa("Margarida", "margarida@gmail.com", "password");
+		Pessoa pessoa13 = new Pessoa("Magna", "magda@gmail.com", "password");
+		Pessoa pessoa14 = new Pessoa("Hiago", "hiago@gmail.com", "password");		
 		sistema.addPessoaNoEvento(evento2, pessoa12);
 		sistema.addPessoaNoEvento(evento2, pessoa13);
 		sistema.addPessoaNoEvento(evento2, pessoa14);

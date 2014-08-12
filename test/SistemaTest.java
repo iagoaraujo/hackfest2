@@ -27,11 +27,14 @@ public class SistemaTest {
 	private String tema3;
 	private String tema4;
 	private String tema5;
+	private Local local1;
 	
 	
 	@Before
 	public void iniciar(){
 		sistema = new Sistema();
+		
+		local1 = new Local("UFCG", "Próximo ao conjunto dos professores", 5);
 		
 		pessoa1 = new Pessoa("Jose", "jose@gmail.com", "password");
 		pessoa2 = new Pessoa("Maria", "maria@gmail.com", "password");
@@ -40,6 +43,7 @@ public class SistemaTest {
 		pessoa5 = new Pessoa("Gleyser", "gleyser@gmail.com", "password");
 		
 		evento1 = new Evento("Dados abertos", "Esse evento tem o objetivo de realizar atividades com dados abertos", "11/09/2014", pessoa1);
+		evento1.setLocal(local1);
 		evento2 = new Evento("HTML", "Esse evento tem o objetivo de realizar atividades com HTML", "09/09/2014", pessoa1);
 		evento3 = new Evento("Computacao Desplugada", "Esse evento tem o objetivo de realizar atividades com computacao desplugada", "11/06/2014", pessoa1);
 		evento4 = new Evento("Metodos Formais", "Esse evento tem o objetivo de realizar atividades com metodos formais", "18/06/2014", pessoa1);
@@ -178,4 +182,43 @@ public class SistemaTest {
 		Assert.assertEquals(evento1, sistema.eventosOrdenadosPorQuantidadeDePessoas().get(0));
 	}
 
+	@Test
+	public void testaEventoEncerrado() {
+		Assert.assertFalse(evento1.isEventoClosed());
+		evento1.addParticipanteNoEvento(pessoa1);
+		Assert.assertTrue(evento1.isEventoClosed());
+	}
+	
+	/*
+	 * Testa se a confirmacao de inscricao de usuarios mais experientes em eventos
+	 * prioritarios.
+	 */
+	@Test
+	public void testaInscricaoEmEventoPrioritario() {
+		Pessoa usuarioMaisExperiente = new Pessoa("Experiente", "experiente@gmail.com", 
+				"password");
+		usuarioMaisExperiente.setNumEventosCriados(1);
+		Pessoa usuarioIntermediario = new Pessoa("Intermediario", "intermediario@gmail.com",
+				"password");
+		usuarioIntermediario.setNumEventosInscritos(2);
+		Pessoa usuarioMenosExperiente = new Pessoa("Menos Experiente", "menosExperiente@gmail.com",
+				"password");
+		Local localEventoPrioritario = new Local();
+		localEventoPrioritario.setCapacidade(1);
+		Evento eventoPrioritario = new Evento();
+		eventoPrioritario.setPrioritario(true);
+		eventoPrioritario.setLocal(localEventoPrioritario);
+		
+		eventoPrioritario.addParticipanteNoEvento(usuarioMenosExperiente);
+		Assert.assertTrue(eventoPrioritario.isUsuarioConfirmado(usuarioMenosExperiente));
+		
+		eventoPrioritario.addParticipanteNoEvento(usuarioIntermediario);
+		Assert.assertFalse(eventoPrioritario.isUsuarioConfirmado(usuarioMenosExperiente));
+		Assert.assertTrue(eventoPrioritario.isUsuarioConfirmado(usuarioIntermediario));
+
+		eventoPrioritario.addParticipanteNoEvento(usuarioMaisExperiente);
+		Assert.assertFalse(eventoPrioritario.isUsuarioConfirmado(usuarioMenosExperiente));
+		Assert.assertFalse(eventoPrioritario.isUsuarioConfirmado(usuarioIntermediario));
+		Assert.assertTrue(eventoPrioritario.isUsuarioConfirmado(usuarioMaisExperiente));
+	}
 }

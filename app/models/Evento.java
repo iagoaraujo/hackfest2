@@ -107,11 +107,17 @@ public class Evento implements Comparable<Evento> {
 		if (!this.pessoasQueConfirmaram.contains(pessoa)){
 			this.pessoasQueConfirmaram.add(pessoa);
 		}
+		if(isPrioritario()) {
+			sortListaInscritos();
+		}
 	}
 	
 	public void removerParticipanteNoEvento(Pessoa pessoa) {
 		if (this.pessoasQueConfirmaram.contains(pessoa)){
 			this.pessoasQueConfirmaram.remove(pessoa);
+		}
+		if (isPrioritario()) {
+			sortListaInscritos();
 		}
 		
 	}
@@ -248,7 +254,6 @@ public class Evento implements Comparable<Evento> {
 	
 	public boolean isUsuarioConfirmado(Pessoa pessoa) {
 		int contador = 1;
-		sortListaInscritos();
 		for (Pessoa inscrito: pessoasQueConfirmaram) {
 			if (inscrito.equals(pessoa)) {
 				return contador<=local.getCapacidade();

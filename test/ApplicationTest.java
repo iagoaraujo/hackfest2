@@ -5,29 +5,20 @@ import static play.test.Helpers.fakeRequest;
 import static play.test.Helpers.inMemoryDatabase;
 import static play.test.Helpers.session;
 import static play.test.Helpers.start;
-
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.Evento;
 import models.Pessoa;
 import models.dao.GenericDAO;
 import models.dao.GenericDAOImpl;
 
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.ContentBody;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.specs2.mock.Mockito;
 
-import play.data.Form;
 import play.db.jpa.JPA;
 import play.mvc.Result;
-import play.test.FakeRequest;
 import play.test.Helpers;
 
 

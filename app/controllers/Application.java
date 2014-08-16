@@ -8,6 +8,7 @@ import models.Pessoa;
 import models.Sistema;
 import models.dao.GenericDAO;
 import models.dao.GenericDAOImpl;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.db.jpa.Transactional;
 import play.mvc.Controller;
@@ -18,109 +19,73 @@ public class Application extends Controller {
 	private static Form<Pessoa> pessoaForm = Form.form(Pessoa.class);
 	private static Form<Local> localForm = Form.form(Local.class);
 	private static GenericDAO dao = new GenericDAOImpl();
-
-    public static Result index() {
-        return ok(views.html.login.render(pessoaForm));
-    }
+	private static Sistema sistema = new Sistema();
     
     @Transactional
     public static Result logar() {
     	if (session().get("user") == null) {
-    		return index();
+    		return redirect(routes.Login.show());
     	}
-    	if (getDao().findAllByClassName("Evento").isEmpty()) {
-    		GeradorExemplos.gera();
-    	}
-    	
-    	Sistema sistema = new Sistema();
-    	List<Evento> result = getDao().findAllByClassName("Evento");
-    	sistema.setEventos(result);
-    	Pessoa usuarioLogado = getDao().findByEntityId(Pessoa.class, 
-				Long.valueOf(session("user")));
-    	sistema.setUsuarioLogado(usuarioLogado);
+    	atualizaSistema();
     	return ok(views.html.sistema.render(sistema));
     }
     
     @Transactional
     public static Result cadastro() {
-    	Sistema sistema = new Sistema();
-    	List<Evento> result = getDao().findAllByClassName("Evento");
-    	sistema.setEventos(result);
-    	List<Local> locais = getDao().findAllByClassName("Local");
-    	return ok(views.html.cadastro.render(sistema, locais, eventoForm, localForm));
+    	return ok(views.html.cadastro.render(sistema, eventoForm, localForm));
     }
     
     @Transactional
     public static Result newEvento() {
-    	// Todos o eventos do Banco de Dados
-    	List<Evento> result = getDao().findAllByClassName("Evento");
     	// O formulario de evento
 		Form<Evento> filledForm = eventoForm.bindFromRequest("nome","descricao",
-				"data","tema1","tema2","tema3","tema4","tema5","localId", 
-				"hasNewLocal", "prioritario");
-		List<Local> locais = getDao().findAllByClassName("Local");
-		
+				"data","tema1","tema2","tema3","tema4","tema5", "tipoDeEvento");
+		DynamicForm requestData = Form.form().bindFromRequest();
+		boolean hasNewLocal = Boolean.valueOf(requestData.get("hasNewLocal"));
 		Evento evento = filledForm.get();
-		
-		Pessoa usuarioLogado = getDao().findByEntityId(Pessoa.class, 
-				Long.valueOf(session("user")));
-		usuarioLogado.setNumEventosCriados(usuarioLogado.getNumEventosCriados()+1);
-		getDao().merge(usuarioLogado);
-		getDao().flush();
-		evento.setAdministrador(usuarioLogado);
-		if(!evento.isHasNewLocal()) {
-			evento.setLocal(getDao().findByEntityId(Local.class, 
-				evento.getLocalId()));
+		if(!hasNewLocal) {
+			long localId = Long.valueOf(requestData.get("localId"));
+			evento = sistema.criaEventoLocalCadastrado(evento, localId);
 		}
 		else {
-			Form<Local> localFormFilled = localForm.bindFromRequest("nomeLocal",
-					"explicacao", "capacidade");
-			Local local = localFormFilled.get();
-			getDao().persist(local);
-			getDao().flush();
-			evento.setLocal(local);
+			Local local = createNewLocal();
+			evento = sistema.criaEventoComNovoLocal(evento, 
+					local);
 		}
-		
-		Sistema sistema = new Sistema();
-    	sistema.setEventos(result);
-    	if (filledForm.hasErrors()) {
-			return badRequest(views.html.cadastro.render(sistema, locais, 
-					eventoForm, localForm));
-		} else {
-			getDao().persist(evento);
-			// Espelha no Banco de Dados
-			getDao().flush();
-			return redirect(routes.Application.logar());
-		}
-    	
-    	
+		getDao().merge(sistema.getUsuarioLogado());
+		getDao().merge(evento);
+		getDao().flush();
+		atualizaSistema();
+		return redirect(routes.Application.logar());
     }
+
+    @Transactional
+	private static Local createNewLocal() {
+		Form<Local> localFormFilled = localForm.bindFromRequest("nomeLocal",
+				"explicacao", "capacidade");
+		Local local = localFormFilled.get();
+		getDao().persist(local);
+		getDao().flush();
+		return local;
+	}
     
     @Transactional
     public static Result participar(Long id) {
     	Evento evento = getDao().findByEntityId(Evento.class, id);
-    	Sistema sistema = new Sistema();
-    	List<Evento> result = getDao().findAllByClassName("Evento");
-    	sistema.setEventos(result);
     	return ok(views.html.evento.render(sistema, evento));
     }
     
     @Transactional
     public static Result addParticipante(Long id) {
     	// Todos o eventos do Banco de Dados
-    	List<Evento> result;
 		Evento evento = getDao().findByEntityId(Evento.class, id);
 		Pessoa pessoa = getDao().findByEntityId(Pessoa.class, 
 				Long.valueOf(session("user")));
 		pessoa.setNumEventosInscritos(pessoa.getNumEventosInscritos()+1);
 		evento.addParticipanteNoEvento(pessoa);
-		evento.sortListaInscritos();
 		getDao().merge(pessoa);
 		getDao().merge(evento);
 		getDao().flush();
-		Sistema sistema = new Sistema();
-    	result = getDao().findAllByClassName("Evento");
-    	sistema.setEventos(result);
 		return ok(views.html.inscricaoFeitaSucesso.render());
 	}
     
@@ -136,12 +101,28 @@ public class Application extends Controller {
     	return ok(views.html.cadastroUsuarioSucesso.render());
     }
 
-	public static GenericDAO getDao() {
+	private static GenericDAO getDao() {
 		return dao;
 	}
 
-	public static void setDao(GenericDAO dao) {
-		Application.dao = dao;
+	@Transactional
+	private static void atualizaEventosDoSistema() {
+		List<Evento> result = getDao().findAllByClassName("Evento");
+    	sistema.setEventos(result);
 	}
-
+	
+	@Transactional
+	private static void atualizaLocaisDoSistema() {
+		List<Local> result = getDao().findAllByClassName("Local");
+		sistema.setLocais(result);
+	}
+	
+	@Transactional
+	private static void atualizaSistema() {
+		atualizaEventosDoSistema();
+    	atualizaLocaisDoSistema();
+    	Pessoa usuarioLogado = getDao().findByEntityId(Pessoa.class, 
+				Long.valueOf(session("user")));
+    	sistema.setUsuarioLogado(usuarioLogado);
+	}
 }

@@ -1,29 +1,16 @@
 package models;
 
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.persistence.*;
-
-@Entity(name = "Sistema")
 public class Sistema {
-	// Todo Id tem que ter o GeneratedValue a nÃ£o ser que ele seja setado
-	@Id
-	@SequenceGenerator(name = "SISTEMA_SEQUENCE", sequenceName = "SISTEMA_SEQUENCE", allocationSize = 1, initialValue = 0)
-	@GeneratedValue(strategy = GenerationType.TABLE)
-	// Usar Id sempre Long
-	private Long id;	
 	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	@JoinColumn
 	private List<Evento> eventos = new ArrayList<Evento>();
+	private List<Local> locais = new ArrayList<Local>();
 	
-	@Transient
 	private Pessoa usuarioLogado;
 	
-	// Construtor vazio para o Hibernate criar os objetos 
 	public Sistema(){
 	}
 
@@ -76,14 +63,6 @@ public class Sistema {
 		return this.eventos.contains(evento);
 	}
 	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
 	public void addPessoaNoEvento(Evento evento, Pessoa pessoa){
 		if (this.eventos.contains(evento)){
 			for (Evento eventoaux : this.eventos){
@@ -96,5 +75,38 @@ public class Sistema {
 				}
 			}
 		}
+	}
+	
+	public List<Local> getLocais() {
+		return locais;
+	}
+
+	public void setLocais(List<Local> locais) {
+		this.locais = locais;
+	}
+
+	public Evento criaEventoComNovoLocal(Evento evento, Local local) {
+		Evento eventoConfigurado = evento;
+		atualizaAdministradorDoEvento(eventoConfigurado);
+		eventoConfigurado.setLocal(local);
+		return eventoConfigurado;
+	}
+	
+	public Evento criaEventoLocalCadastrado(Evento evento, long localId) {
+		Evento eventoConfigurado = evento;
+		for (Local local: locais) {
+			if (local.getId()==localId) {
+				eventoConfigurado.setLocal(local);
+				break;
+			}
+		}
+		atualizaAdministradorDoEvento(eventoConfigurado);
+		return eventoConfigurado;
+	}
+	
+	private void atualizaAdministradorDoEvento(Evento evento) {
+		evento.setAdministrador(getUsuarioLogado());
+		getUsuarioLogado().setNumEventosCriados(getUsuarioLogado()
+				.getNumEventosCriados()+1);
 	}
 }

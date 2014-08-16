@@ -1,4 +1,4 @@
-@(sistema: Sistema, locais: List[Local], eventoForm: Form[Evento], localForm: Form[Local])
+@(sistema: Sistema, eventoForm: Form[Evento], localForm: Form[Local])
 <!DOCTYPE html>
 <html>
 	<head>
@@ -32,12 +32,6 @@
 	                    $("#selectLocalDiv").show();
 	             }
 	        });
-
-	        $('#checkboxPrioridade').change(function(){
-	        	 cb = $(this);
-	             cb.val(cb.prop('checked'));
-	        });
-
 	    });
 		</script>
 		
@@ -62,17 +56,17 @@
 			<input class="input-xxlarge" type="text" size="80" maxlength="30" placeholder="T&iacute;tulo do hackfest" name="nome"><br><br>
             <input class="input-xxlarge" type="text" size="176" maxlength="80" placeholder="Descreva o seu hackfest" name="descricao"><br><br>
             <input class="input-xxlarge" type="text" size="40" maxlength="10" placeholder="Data do seu hackfest: dd/mm/aaaa" name="data"> <br>
-            <h4> <b>Apague</b> o(s) tema(s) na qual o seu evento n&atilde;o est&aacute; relacionado:</h4>
-            <input class="input-xlarge" size="30" id="focusedInput" type="text" value="Engenharia de Software" name=tema1>
-            <input class="input-xlarge" size="30" id="focusedInput" type="text" value="Banco de Dados" name=tema2>
-            <input class="input-xlarge" size="30" id="focusedInput" type="text" value="Sistemas da Informacao" name=tema3>
-            <input class="input-xlarge" size="30" id="focusedInput" type="text" value="Computacao Desplugada" name=tema4>
-            <input class="input-xlarge" size="30" id="focusedInput" type="text" value="Desenvolvimento para Web" name=tema5>
+            <h4> <b>Selecione</b> o(s) tema(s) na qual o seu evento n&atilde;o est&aacute; relacionado:</h4>
+            <input class="input-xlarge" size="30" type="checkbox" value="Engenharia de Software" name=tema1> Engenharia de Software
+            <input class="input-xlarge" size="30" type="checkbox" value="Banco de Dados" name=tema2> Banco de Dados
+            <input class="input-xlarge" size="30" type="checkbox" value="Sistemas da Informacao" name=tema3> Sistemas da Informacão
+            <input class="input-xlarge" size="30" type="checkbox" value="Computacao Desplugada" name=tema4> Computação Desplugada
+            <input class="input-xlarge" size="30" type="checkbox" value="Desenvolvimento para Web" name=tema5> Desenvolvimento para Web
             
             <div id="selectLocalDiv">
             <h4>Selecione o local do evento: </h4>
              <select name="localId">
-            	@for(local <- locais) {
+            	@for(local <- sistema.getLocais()) {
   					<option value=@local.getId()>@local.getNomeLocal()</option>
   				}
 			</select>
@@ -85,7 +79,11 @@
             	<input class="input-xxlarge" type="text" size="176" maxlength="80" placeholder="Descreva como chegar ao local" name="explicacao" value=""><br><br>
             	<input class="input-xxlarge" type="number" size="40" maxlength="10" placeholder="Capacidade" name="capacidade" value=""> <br>
             </div>
-            <input type="checkbox" id="checkboxPrioridade" name="prioritario" value="">Hackfest prioritário para os mais experientes<br>
+            <select name="tipoDeEvento" style="color: black;">
+                <option value="" disabled>-- Selecione uma --</option>
+                <option value="evento normal">Evento Normal</option>
+                <option value="evento prioritario para experientes">Prioriátio para os Experientes</option>
+            </select>
             
 			<br>
 			<br>

@@ -1,10 +1,22 @@
 package models;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+
+import models.strategy.ETipoEvento;
+import models.strategy.EventoStrategy;
+import models.strategy.EventoStrategyNormal;
+import models.strategy.EventoStrategyPrioritario;
 
 @Entity(name = "Evento")
 public class Evento implements Comparable<Evento> {
@@ -48,26 +60,18 @@ public class Evento implements Comparable<Evento> {
 	private String tema5;
 	
 	@Column
-	private boolean prioritario;
+	private String tipoDeEvento;
 	
-	//Usado pelo formulário de cadastro do evento
-	@Transient
-	private Long localId;
-	@Transient
-	private boolean hasNewLocal;
-		
 	@ManyToMany(cascade=CascadeType.ALL)
 	private List<Pessoa> pessoasQueConfirmaram =  new ArrayList<Pessoa>();
 	
 	// Construtor vazio para o Hibernate criar os objetos
 	public Evento(){
 	}
+	
 	public Evento(String nome, String descricao, String data, Pessoa administrador,
 			Local local) {
-		this.nome = nome;
-		this.descricao = descricao;
-		this.data = data;
-		this.administrador = administrador;
+		this(nome, descricao, data, administrador);
 		this.local = local;
 	}
 	public Evento(String nome, String descricao, String data, Pessoa administrador) {
@@ -75,6 +79,7 @@ public class Evento implements Comparable<Evento> {
 		this.descricao = descricao;
 		this.data = data;
 		this.administrador = administrador;
+		this.tipoDeEvento = ETipoEvento.NORMAL.getNome();
 	}
 	public String getNome() {
 		return nome;
@@ -95,20 +100,9 @@ public class Evento implements Comparable<Evento> {
 		this.data = data;
 	}
 	
-	public Long getLocalId() {
-		return localId;
-	}
-		
-	public void setLocalId(Long id) {
-		this.localId = id;
-	}
-	
 	public void addParticipanteNoEvento(Pessoa pessoa) {
-		if (!this.pessoasQueConfirmaram.contains(pessoa)){
-			this.pessoasQueConfirmaram.add(pessoa);
-		}
-		if(isPrioritario()) {
-			sortListaInscritos();
+		if (!this.pessoasQueConfirmaram.contains(pessoa)) {
+			pessoasQueConfirmaram.add(pessoa);
 		}
 	}
 	
@@ -116,10 +110,6 @@ public class Evento implements Comparable<Evento> {
 		if (this.pessoasQueConfirmaram.contains(pessoa)){
 			this.pessoasQueConfirmaram.remove(pessoa);
 		}
-		if (isPrioritario()) {
-			sortListaInscritos();
-		}
-		
 	}
 	
 	public int numDePessoasQueConfirmaram(){
@@ -231,45 +221,43 @@ public class Evento implements Comparable<Evento> {
 		}
 		
 	}
-	public boolean isHasNewLocal() {
-		return hasNewLocal;
-	}
-	public void setHasNewLocal(boolean hasNewLocal) {
-		this.hasNewLocal = hasNewLocal;
-	}
 	
+	public String getTipoDeEvento() {
+		return tipoDeEvento;
+	}
+
+	public void setTipoDeEvento(String tipoDeEvento) {
+		this.tipoDeEvento = tipoDeEvento;
+	}
+
 	public boolean isEventoClosed() {
 		return this.getLocal().getCapacidade()<=numDePessoasQueConfirmaram();
 	}
 	
-	public boolean isUsuarioInscrito(Pessoa pessoa) {
-		if (!pessoasQueConfirmaram.contains(pessoa)) {
-			return false;
-		}
-		if (isPrioritario()) {
-			return isUsuarioConfirmado(pessoa);
-		}
-		return true;
-	}
-	
 	public boolean isUsuarioConfirmado(Pessoa pessoa) {
-		int contador = 1;
-		for (Pessoa inscrito: pessoasQueConfirmaram) {
-			if (inscrito.equals(pessoa)) {
-				return contador<=local.getCapacidade();
-			}
-			contador++;
-		}
-		return false;
+		return getEventoStrategy().isParticipacaoConfirmada(this, pessoa);
 	}
 	
 	public boolean isPrioritario() {
-		return prioritario;
+		return tipoDeEvento.equals(ETipoEvento.PRIORIDADE_EXPERIENTES.getNome());
 	}
-	public void setPrioritario(boolean prioritario) {
-		this.prioritario = prioritario;
-	}
-	public void sortListaInscritos() {
-		Collections.sort(pessoasQueConfirmaram);
+	
+	private EventoStrategy getEventoStrategy() {
+		ETipoEvento eTipoEvento = ETipoEvento.getTipoStrategy(tipoDeEvento);
+		EventoStrategy eventoStrategy;
+		switch (eTipoEvento) {
+		case NORMAL:
+			eventoStrategy = new EventoStrategyNormal();
+			break;
+			
+		case PRIORIDADE_EXPERIENTES:
+			eventoStrategy = new EventoStrategyPrioritario();
+			break;
+		//O default seria um evento do tipo Normal
+		default:
+			eventoStrategy = null;
+			break;
+		}
+		return eventoStrategy;
 	}
 }

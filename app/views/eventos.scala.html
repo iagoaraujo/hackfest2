@@ -21,12 +21,12 @@
                             <td>@evento.getData()</td>
                             
                             <td>
-                            @if(evento.isUsuarioInscrito(sistema.getUsuarioLogado())) {
+                            @if(evento.isUsuarioConfirmado(sistema.getUsuarioLogado())) {
                             	<input type="button" class="btn btn-primary" value="Inscrito" disabled="disabled">
                             } else {
                            		@if(evento.isPrioritario()) {
                             		@if(!evento.isUsuarioConfirmado(sistema.getUsuarioLogado()) && evento.getPessoasQueConfirmaram().contains(sistema.getUsuarioLogado())) {
-                            			<input type="button" class="btn btn-primary" value="Experiencia Insuficiente" disabled="disabled">
+                            			<input type="button" class="btn btn-primary" value="Inexperiente" disabled="disabled">
                             		} else {
                             			<form action="@routes.Application.participar(evento.getId())" method="get"> 
                                 			<input type="submit" class="btn btn-primary" value="Participar">

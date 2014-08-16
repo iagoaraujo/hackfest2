@@ -3,6 +3,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import models.*;
+import models.strategy.ETipoEvento;
 
 
 public class SistemaTest {
@@ -206,7 +207,7 @@ public class SistemaTest {
 		Local localEventoPrioritario = new Local();
 		localEventoPrioritario.setCapacidade(1);
 		Evento eventoPrioritario = new Evento();
-		eventoPrioritario.setPrioritario(true);
+		eventoPrioritario.setTipoDeEvento(ETipoEvento.PRIORIDADE_EXPERIENTES.getNome());
 		eventoPrioritario.setLocal(localEventoPrioritario);
 		
 		eventoPrioritario.addParticipanteNoEvento(usuarioMenosExperiente);

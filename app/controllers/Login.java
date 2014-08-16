@@ -24,6 +24,9 @@ public class Login extends Controller {
 	
 	@Transactional
     public static Result show() {
+    	if (getDao().findAllByClassName("Evento").isEmpty()) {
+    		GeradorExemplos.gera();
+    	}
 		if (session().get("user") != null) {
 			return redirect(routes.Application.logar());
 		}
@@ -35,7 +38,6 @@ public class Login extends Controller {
 		Pessoa pessoa = getLoginForm().bindFromRequest().get();
 		Pessoa user = userRegistered(pessoa);
 		if (user==null) {
-			System.out.println("FAIL");
 			flash("fail", "Email ou Senha Inválidos");
 			return badRequest(login.render(getLoginForm()));
 		}

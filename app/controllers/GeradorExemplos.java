@@ -19,6 +19,10 @@ public class GeradorExemplos {
 	private static final int CAPACIDADE_LOCAL1 = 14;
 	private static final int CAPACIDADE_LOCAL2 = 40;
 	private static final int CAPACIDADE_LOCAL3 = 50;
+	
+	private static final int QUANTIDADE_INSCRICOES_MAIS_EXPERIENTES = 7;
+	private static final int QUANTIDADE_INSCRICOES_INTERMEDIARIO = 6;
+	private static final int QUANTIDADE_INSCRICOES_MENOS_EXPERIENTES = 3;
 
 	private static Pessoa usuario1;
 	private static Pessoa usuario2;
@@ -76,21 +80,21 @@ public class GeradorExemplos {
 					usuario14 = new Pessoa("igor", "igor@igor", "password");
 					usuario15 = new Pessoa("nara", "nara@nara", "password");
 
-					usuario1.setNumEventosInscritos(7);
-					usuario2.setNumEventosInscritos(7);
-					usuario3.setNumEventosInscritos(7);
-					usuario4.setNumEventosInscritos(7);
-					usuario5.setNumEventosInscritos(7);
-					usuario6.setNumEventosInscritos(6);
-					usuario7.setNumEventosInscritos(6);
-					usuario8.setNumEventosInscritos(6);
-					usuario9.setNumEventosInscritos(6);
-					usuario10.setNumEventosInscritos(6);
-					usuario11.setNumEventosInscritos(3);
-					usuario12.setNumEventosInscritos(3);
-					usuario13.setNumEventosInscritos(3);
-					usuario14.setNumEventosInscritos(3);
-					usuario15.setNumEventosInscritos(3);
+					usuario1.setNumEventosInscritos(QUANTIDADE_INSCRICOES_MAIS_EXPERIENTES);
+					usuario2.setNumEventosInscritos(QUANTIDADE_INSCRICOES_MAIS_EXPERIENTES);
+					usuario3.setNumEventosInscritos(QUANTIDADE_INSCRICOES_MAIS_EXPERIENTES);
+					usuario4.setNumEventosInscritos(QUANTIDADE_INSCRICOES_MAIS_EXPERIENTES);
+					usuario5.setNumEventosInscritos(QUANTIDADE_INSCRICOES_MAIS_EXPERIENTES);
+					usuario6.setNumEventosInscritos(QUANTIDADE_INSCRICOES_INTERMEDIARIO);
+					usuario7.setNumEventosInscritos(QUANTIDADE_INSCRICOES_INTERMEDIARIO);
+					usuario8.setNumEventosInscritos(QUANTIDADE_INSCRICOES_INTERMEDIARIO);
+					usuario9.setNumEventosInscritos(QUANTIDADE_INSCRICOES_INTERMEDIARIO);
+					usuario10.setNumEventosInscritos(QUANTIDADE_INSCRICOES_INTERMEDIARIO);
+					usuario11.setNumEventosInscritos(QUANTIDADE_INSCRICOES_MENOS_EXPERIENTES);
+					usuario12.setNumEventosInscritos(QUANTIDADE_INSCRICOES_MENOS_EXPERIENTES);
+					usuario13.setNumEventosInscritos(QUANTIDADE_INSCRICOES_MENOS_EXPERIENTES);
+					usuario14.setNumEventosInscritos(QUANTIDADE_INSCRICOES_MENOS_EXPERIENTES);
+					usuario15.setNumEventosInscritos(QUANTIDADE_INSCRICOES_MENOS_EXPERIENTES);
 
 					List<Pessoa> inscritosEvento1 = new ArrayList<Pessoa>();
 					inscritosEvento1.add(usuario1);

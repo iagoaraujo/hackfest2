@@ -20,7 +20,7 @@
                             <td>@evento.getDescricao()</td>
                             <td>@evento.getData()</td>
                             
-                            <td>
+                            <td><center>
                             @if(evento.isUsuarioConfirmado(sistema.getUsuarioLogado())) {
                             	<input type="button" class="btn btn-primary" value="Inscrito" disabled="disabled">
                             } else {
@@ -42,7 +42,7 @@
                             		}
                             	}
                             }
-                            </td>
+                            </center></td>
                         </tr>
                     }
                     </tbody>

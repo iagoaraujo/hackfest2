@@ -5,6 +5,7 @@ import static play.test.Helpers.fakeRequest;
 import static play.test.Helpers.inMemoryDatabase;
 import static play.test.Helpers.session;
 import static play.test.Helpers.start;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ import play.test.Helpers;
 * If you are interested in mocking a whole application, see the wiki for more details.
 *
 */
-public class ApplicationTest {
+public class IntegrationTest {
 
 private Pessoa usuario;
 private Result result;
@@ -85,8 +86,6 @@ private GenericDAO dao;
     	    }
     	});
     }
-    
-    
     
     private Result criaUsuario(Pessoa usuario) {
     	Map<String, String> formData = new HashMap<String, String>();

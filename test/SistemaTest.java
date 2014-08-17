@@ -18,6 +18,7 @@ public class SistemaTest {
 	private Evento evento8;
 	private Evento evento9;
 	private Evento evento10;
+	private Evento eventoSemAdm;
 	private Pessoa pessoa1;
 	private Pessoa pessoa2;
 	private Pessoa pessoa3;
@@ -54,6 +55,10 @@ public class SistemaTest {
 		evento8 = new Evento("Aplicações Java", "Esse evento tem o objetivo de realizar atividades com aplicacoes java", "01/09/2014", pessoa1);
 		evento9 = new Evento("Estruturas de dados", "Esse evento tem o objetivo de realizar atividades com estruturas de dados", "12/07/2014", pessoa1);
 		evento10 = new Evento("Binarios", "Esse evento tem o objetivo de realizar atividades com binarios sem a utilizacao de computador", "11/09/2014", pessoa1);
+		eventoSemAdm = new Evento();
+		eventoSemAdm.setNome("Computacao Verde");
+		eventoSemAdm.setDescricao("Evento cujo tema e computacao verde");
+		eventoSemAdm.setData("2014-12-04");
 		
 		tema1 = "Engenharia de Software";
 		tema2 = "Sistemas da Informacao";
@@ -185,9 +190,14 @@ public class SistemaTest {
 
 	@Test
 	public void testaEventoEncerrado() {
+		//Evento normal
 		Assert.assertFalse(evento1.isEventoClosed());
 		evento1.addParticipanteNoEvento(pessoa1);
 		Assert.assertTrue(evento1.isEventoClosed());
+		
+		//Evento prioritario
+		evento1.setTipoDeEvento(ETipoEvento.PRIORIDADE_EXPERIENTES.getNome());
+		Assert.assertFalse(evento1.isEventoClosed());
 	}
 	
 	/*
@@ -221,5 +231,27 @@ public class SistemaTest {
 		Assert.assertFalse(eventoPrioritario.isUsuarioConfirmado(usuarioMenosExperiente));
 		Assert.assertFalse(eventoPrioritario.isUsuarioConfirmado(usuarioIntermediario));
 		Assert.assertTrue(eventoPrioritario.isUsuarioConfirmado(usuarioMaisExperiente));
+	}
+	
+	@Test
+	public void testaCriaEventoComNovoLocal() {
+		sistema.setUsuarioLogado(pessoa1);
+		sistema.criaEventoComNovoLocal(eventoSemAdm, local1);
+		Assert.assertEquals(eventoSemAdm.getAdministrador(), pessoa1);
+		Assert.assertEquals(eventoSemAdm.getLocal(), local1);
+		Assert.assertTrue(sistema.getEventos().contains(eventoSemAdm));
+		Assert.assertTrue(sistema.getLocais().contains(local1));
+	}
+	
+	@Test
+	public void testaCriaEventoComLocalJaCadastrado() {
+		sistema.setUsuarioLogado(pessoa1);
+		final long LOCAL_ID = 1;
+		local1.setId(LOCAL_ID);
+		sistema.addLocal(local1);
+		sistema.criaEventoLocalCadastrado(eventoSemAdm, LOCAL_ID);
+		Assert.assertEquals(eventoSemAdm.getAdministrador(), pessoa1);
+		Assert.assertEquals(eventoSemAdm.getLocal(), local1);
+		Assert.assertTrue(sistema.getEventos().contains(eventoSemAdm));
 	}
 }

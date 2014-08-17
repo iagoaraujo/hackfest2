@@ -86,27 +86,34 @@ public class Sistema {
 	}
 
 	public Evento criaEventoComNovoLocal(Evento evento, Local local) {
-		Evento eventoConfigurado = evento;
-		atualizaAdministradorDoEvento(eventoConfigurado);
-		eventoConfigurado.setLocal(local);
-		return eventoConfigurado;
+		atualizaAdministradorDoEvento(evento);
+		evento.setLocal(local);
+		addEvento(evento);
+		addLocal(local);
+		return evento;
 	}
 	
 	public Evento criaEventoLocalCadastrado(Evento evento, long localId) {
-		Evento eventoConfigurado = evento;
 		for (Local local: locais) {
 			if (local.getId()==localId) {
-				eventoConfigurado.setLocal(local);
+				evento.setLocal(local);
 				break;
 			}
 		}
-		atualizaAdministradorDoEvento(eventoConfigurado);
-		return eventoConfigurado;
+		atualizaAdministradorDoEvento(evento);
+		addEvento(evento);
+		return evento;
 	}
 	
 	private void atualizaAdministradorDoEvento(Evento evento) {
 		evento.setAdministrador(getUsuarioLogado());
 		getUsuarioLogado().setNumEventosCriados(getUsuarioLogado()
 				.getNumEventosCriados()+1);
+	}
+	
+	public void addLocal(Local local) {
+		if (!locais.contains(local)) {
+			locais.add(local);
+		}
 	}
 }

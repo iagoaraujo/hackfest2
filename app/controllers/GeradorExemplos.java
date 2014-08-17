@@ -199,22 +199,22 @@ public class GeradorExemplos {
 
 					administrador = new Pessoa("Jose", "jose@gmail.com", "password");
 
-					evento1 = new Evento("Dados abertos", "Esse evento tem o objetivo de realizar atividades com dados abertos", "11/09/2014", administrador, local1);
+					evento1 = new Evento("Dados abertos", "Esse evento tem o objetivo de realizar atividades com dados abertos", "2014-09-11", administrador, local1);
 					evento1.setTipoDeEvento(ETipoEvento.PRIORIDADE_EXPERIENTES.getNome());;
 					evento1.setPessoasQueConfirmaram(inscritosEvento1);
-					evento2 = new Evento("HTML", "Esse evento tem o objetivo de realizar atividades com HTML", "09/09/2014", administrador, local2);
+					evento2 = new Evento("HTML", "Esse evento tem o objetivo de realizar atividades com HTML", "2014-09-09", administrador, local2);
 					evento1.setTipoDeEvento(ETipoEvento.PRIORIDADE_EXPERIENTES.getNome());;
 					evento2.setPessoasQueConfirmaram(inscritosEvento2);
-					evento3 = new Evento("Computacao Desplugada", "Esse evento tem o objetivo de realizar atividades com computacao desplugada", "11/06/2014", administrador, local3);
+					evento3 = new Evento("Computacao Desplugada", "Esse evento tem o objetivo de realizar atividades com computacao desplugada", "2014-06-11", administrador, local3);
 					evento1.setTipoDeEvento(ETipoEvento.PRIORIDADE_EXPERIENTES.getNome());;
 					evento3.setPessoasQueConfirmaram(inscritosEvento3);
-					evento4 = new Evento("Metodos Formais", "Esse evento tem o objetivo de realizar atividades com metodos formais", "18/06/2014", administrador, local1);
+					evento4 = new Evento("Metodos Formais", "Esse evento tem o objetivo de realizar atividades com metodos formais", "2014-06-18", administrador, local1);
 					evento4.setPessoasQueConfirmaram(inscritosEvento4);
-					evento5 = new Evento("Banco de Dados Gerenciais", "Esse evento tem o objetivo de realizar atividades com banco de dados gerenciais", "11/09/2014", administrador, local2);
+					evento5 = new Evento("Banco de Dados Gerenciais", "Esse evento tem o objetivo de realizar atividades com banco de dados gerenciais", "2014-09-11", administrador, local2);
 					evento5.setPessoasQueConfirmaram(inscritosEvento5);
-					evento6 = new Evento("Banco de Dados Sequenciais", "Esse evento tem o objetivo de realizar atividades com banco de dados sequenciais", "14/09/2014", administrador, local3);
+					evento6 = new Evento("Banco de Dados Sequenciais", "Esse evento tem o objetivo de realizar atividades com banco de dados sequenciais", "2014-09-14", administrador, local3);
 					evento6.setPessoasQueConfirmaram(inscritosEvento6);
-					evento7 = new Evento("Sites Dinamicos", "Esse evento tem o objetivo de realizar atividades com sites dinamicos", "17/08/2014", administrador, local1);
+					evento7 = new Evento("Sites Dinamicos", "Esse evento tem o objetivo de realizar atividades com sites dinamicos", "2014-10-17", administrador, local1);
 					evento7.setPessoasQueConfirmaram(inscritosEvento7);
 
 					tema1 = "Engenharia de Software";

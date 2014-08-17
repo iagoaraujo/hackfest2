@@ -32,12 +32,12 @@ public class Application extends Controller {
     
     @Transactional
     public static Result cadastro() {
+    	atualizaLocaisDoSistema();
     	return ok(views.html.cadastro.render(sistema, eventoForm, localForm));
     }
     
     @Transactional
     public static Result newEvento() {
-    	// O formulario de evento
 		Form<Evento> filledForm = eventoForm.bindFromRequest("nome","descricao",
 				"data","tema1","tema2","tema3","tema4","tema5", "tipoDeEvento");
 		DynamicForm requestData = Form.form().bindFromRequest();
@@ -51,11 +51,12 @@ public class Application extends Controller {
 			Local local = createNewLocal();
 			evento = sistema.criaEventoComNovoLocal(evento, 
 					local);
+			atualizaLocaisDoSistema();
 		}
 		getDao().merge(sistema.getUsuarioLogado());
 		getDao().merge(evento);
 		getDao().flush();
-		atualizaSistema();
+		atualizaEventosDoSistema();
 		return redirect(routes.Application.logar());
     }
 
@@ -121,7 +122,12 @@ public class Application extends Controller {
 	private static void atualizaSistema() {
 		atualizaEventosDoSistema();
     	atualizaLocaisDoSistema();
-    	Pessoa usuarioLogado = getDao().findByEntityId(Pessoa.class, 
+    	atualizaUsuarioLogado();
+	}
+	
+	@Transactional
+	private static void atualizaUsuarioLogado() {
+		Pessoa usuarioLogado = getDao().findByEntityId(Pessoa.class, 
 				Long.valueOf(session("user")));
     	sistema.setUsuarioLogado(usuarioLogado);
 	}

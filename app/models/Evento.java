@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
+import javax.validation.constraints.NotNull;
 
 import models.strategy.ETipoEvento;
 import models.strategy.EventoStrategy;
@@ -30,12 +31,15 @@ public class Evento implements Comparable<Evento> {
 	private Long id;
 	
 	@Column	
+	@NotNull
 	private String nome;
 	
 	@Column
+	@NotNull
 	private String descricao;
 	
 	@Column
+	@NotNull
 	private String data;
 	
 	@OneToOne
@@ -231,7 +235,8 @@ public class Evento implements Comparable<Evento> {
 	}
 
 	public boolean isEventoClosed() {
-		return this.getLocal().getCapacidade()<=numDePessoasQueConfirmaram();
+		return this.getLocal().getCapacidade()<=numDePessoasQueConfirmaram()
+				&& tipoDeEvento.equals(ETipoEvento.NORMAL.getNome());
 	}
 	
 	public boolean isUsuarioConfirmado(Pessoa pessoa) {
@@ -260,4 +265,36 @@ public class Evento implements Comparable<Evento> {
 		}
 		return eventoStrategy;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((data == null) ? 0 : data.hashCode());
+		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Evento))
+			return false;
+		Evento other = (Evento) obj;
+		if (data == null) {
+			if (other.data != null)
+				return false;
+		} else if (!data.equals(other.data))
+			return false;
+		if (nome == null) {
+			if (other.nome != null)
+				return false;
+		} else if (!nome.equals(other.nome))
+			return false;
+		return true;
+	}
+	
 }

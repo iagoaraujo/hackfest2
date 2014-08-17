@@ -80,18 +80,23 @@ public class Local {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof Local))
+		}
+		if (!(obj instanceof Local)) {
 			return false;
+		}
 		Local other = (Local) obj;
 		if (nomeLocal == null) {
-			if (other.nomeLocal != null)
+			if (other.nomeLocal != null) {
 				return false;
-		} else if (!nomeLocal.equals(other.nomeLocal))
+			}
+		} else if (!nomeLocal.equals(other.nomeLocal)) {
 			return false;
+		}
 		return true;
 	}
 	

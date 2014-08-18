@@ -1,4 +1,4 @@
-@(sistema: Sistema, locais: List[Local], eventoForm: Form[Evento], localForm: Form[Local])
+@(sistema: Sistema, eventoForm: Form[Evento], localForm: Form[Local])
 <!DOCTYPE html>
 <html>
 	<head>
@@ -25,11 +25,17 @@
 	             {
 	                   $("#registerLocalDiv").show();
 	                   $("#selectLocalDiv").hide();
+	                   $("#nomeLocal").prop('required',true);
+	                   $("#explicacaoLocal").prop('required',true);
+	                   $("#capacidadeLocal").prop('required',true);
 	             }
 	             else
 	             {
 	                    $("#registerLocalDiv").hide();
 	                    $("#selectLocalDiv").show();
+	                    $("#nomeLocal").prop('required',false);
+		                $("#explicacaoLocal").prop('required',false);
+		                $("#capacidadeLocal").prop('required',false);
 	             }
 	        });
 	    });
@@ -53,20 +59,21 @@
 		
 			<h3>Adicionar novo Hackfest:</h3>
 			
-			<input class="input-xxlarge" type="text" size="80" maxlength="30" placeholder="T&iacute;tulo do hackfest" name="nome"><br><br>
-            <input class="input-xxlarge" type="text" size="176" maxlength="80" placeholder="Descreva o seu hackfest" name="descricao"><br><br>
-            <input class="input-xxlarge" type="text" size="40" maxlength="10" placeholder="Data do seu hackfest: dd/mm/aaaa" name="data"> <br>
-            <h4> <b>Apague</b> o(s) tema(s) na qual o seu evento n&atilde;o est&aacute; relacionado:</h4>
-            <input class="input-xlarge" size="30" id="focusedInput" type="text" value="Engenharia de Software" name=tema1>
-            <input class="input-xlarge" size="30" id="focusedInput" type="text" value="Banco de Dados" name=tema2>
-            <input class="input-xlarge" size="30" id="focusedInput" type="text" value="Sistemas da Informacao" name=tema3>
-            <input class="input-xlarge" size="30" id="focusedInput" type="text" value="Computacao Desplugada" name=tema4>
-            <input class="input-xlarge" size="30" id="focusedInput" type="text" value="Desenvolvimento para Web" name=tema5>
+			<input class="input-xxlarge" type="text" size="80" maxlength="30" placeholder="T&iacute;tulo do hackfest" name="nome" required="required"><br><br>
+            <input class="input-xxlarge" type="text" size="176" maxlength="80" placeholder="Descreva o seu hackfest" name="descricao" required="required"><br><br>
+            <input class="input-xxlarge" type="date" size="40" maxlength="10" placeholder="Data do seu hackfest: dd/mm/aaaa" name="data" required="required"> <br>
+            <h4> <b>Selecione</b> o(s) tema(s) na qual o seu evento est&aacute; relacionado:</h4>
+            <input class="input-xlarge" size="30" type="checkbox" value="Engenharia de Software" name=tema1> Engenharia de Software <br>
+            <input class="input-xlarge" size="30" type="checkbox" value="Banco de Dados" name=tema2> Banco de Dados <br>
+            <input class="input-xlarge" size="30" type="checkbox" value="Sistemas da Informacao" name=tema3> Sistemas da Informacão <br>
+            <input class="input-xlarge" size="30" type="checkbox" value="Computacao Desplugada" name=tema4> Computação Desplugada <br>
+            <input class="input-xlarge" size="30" type="checkbox" value="Desenvolvimento para Web" name=tema5> Desenvolvimento para Web <br>
             
             <div id="selectLocalDiv">
-            <h4>Selecione o local do evento: </h4>
+            <h4> <b>Selecione</b> o local do evento: </h4>
              <select name="localId">
-            	@for(local <- locais) {
+             	<option value="" disabled>-- Selecione um --</option>
+            	@for(local <- sistema.getLocais()) {
   					<option value=@local.getId()>@local.getNomeLocal()</option>
   				}
 			</select>
@@ -74,11 +81,18 @@
 			<br>
             <input type="checkbox" id="checkboxLocal" name="hasNewLocal" value="">Outro local<br>
             <div id="registerLocalDiv" hidden="true">
-            	<h4>Informe o local do evento: </h4>
-            	<input class="input-xxlarge" type="text" size="80" maxlength="30" placeholder="Nome do local" name="nomeLocal" value=""><br><br>
-            	<input class="input-xxlarge" type="text" size="176" maxlength="80" placeholder="Descreva como chegar ao local" name="explicacao" value=""><br><br>
-            	<input class="input-xxlarge" type="number" size="40" maxlength="10" placeholder="Capacidade" name="capacidade" value=""> <br>
+            	<h4> <b>Informe</b> o local do evento: </h4>
+            	<input id="nomeLocal" class="input-xxlarge" type="text" size="80" maxlength="30" placeholder="Nome do local" name="nomeLocal" value=""><br><br>
+            	<input id="explicacaoLocal" class="input-xxlarge" type="text" size="176" maxlength="80" placeholder="Descreva como chegar ao local" name="explicacao" value=""><br><br>
+            	<input id="capacidadeLocal" class="input-xxlarge" type="number" size="40" maxlength="10" placeholder="Capacidade" name="capacidade" value=""> <br>
             </div>
+            <br>
+            <h4> <b>Selecione</b> o tipo do Hackfest: </h4>
+            <select name="tipoDeEvento" style="color: black;">
+                <option value="" disabled>-- Selecione um --</option>
+                <option value="evento normal">Evento Normal</option>
+                <option value="evento prioritario para experientes">Prioriátio para os Experientes</option>
+            </select>
             
 			<br>
 			<br>

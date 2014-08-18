@@ -14,21 +14,35 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @for(evento <- sistema.EventosPorTema(tema)) {
+                    @for(evento <- sistema.eventosPorTema(tema)) {
                         <tr>
                             <td>@evento.getNome()</td>
                             <td>@evento.getDescricao()</td>
                             <td>@evento.getData()</td>
                             
-                            <td>
-                            @if(!evento.isEventoClosed() && !evento.isUsuarioInscrito(sistema.getUsuarioLogado())) {                        
-                            <form action="@routes.Application.participar(evento.getId())" method="post"> 
-                                <input type="submit" class="btn btn-primary" value="Participar">
-                            </form>
-                            } else {
+                            <td><center>
+                            @if(evento.isUsuarioConfirmado(sistema.getUsuarioLogado())) {
                             	<input type="button" class="btn btn-primary" value="Inscrito" disabled="disabled">
-                            } 
-                            </td>
+                            } else {
+                           		@if(evento.isPrioritario()) {
+                            		@if(!evento.isUsuarioConfirmado(sistema.getUsuarioLogado()) && evento.getPessoasQueConfirmaram().contains(sistema.getUsuarioLogado())) {
+                            			<input type="button" class="btn btn-primary" value="Inexperiente" disabled="disabled">
+                            		} else {
+                            			<form action="@routes.Application.participar(evento.getId())" method="get"> 
+                                			<input type="submit" class="btn btn-primary" value="Participar">
+                            			</form>
+                            		} 
+                            	} else {
+                            		@if(evento.isEventoClosed()) {
+                            			<input type="button" class="btn btn-primary" value="Completo" disabled="disabled">
+                            		} else {
+                            			<form action="@routes.Application.participar(evento.getId())" method="get"> 
+                                			<input type="submit" class="btn btn-primary" value="Participar">
+                            			</form>
+                            		}
+                            	}
+                            }
+                            </center></td>
                         </tr>
                     }
                     </tbody>
